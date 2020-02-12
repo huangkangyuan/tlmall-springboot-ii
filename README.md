@@ -508,7 +508,7 @@ public ServerResponse<PageInfo> list(@PathVariable("keyword") String keyword,
 }
 ```
 
-### （十一）Spring Schedule定时关单 & Redis分布式锁原理
+### （十一）Spring Schedule定时关单
 
 Spring Schedule类似于Linux中crontab命令，[参考](https://github.com/tanglei302wqy/notes/blob/master/linux/markdown/2_Linux%E8%BF%9B%E9%98%B6.md)
 
@@ -585,4 +585,94 @@ select * from tlmall_product where id <> `66` for update;
 ```
 
 
+
+### （十二）分布式锁原理&实现
+
+在上一节最后的定时关单实现中，直接调用iOrderService.closeOrder(hour);方法，这种关单方法只适合单个tomcat服务情况，在tomcat集群模式下会出现并发问题，需要使用分布式锁来解决。
+
+[参考代码]()
+
+**分布式锁原理**
+
+分布式锁原理主要涉及到Redis几个原子命令：
+
+- setnx
+- getset
+- expire
+- del
+
+主要思想包括：
+
+- 使用setnx特性：key不存在才设置成功，充当分布式锁，当前线程setnx成功后，相当于当前线程获取了分布式锁，别的线程无法setnx，即不能获取分布式锁，需要等待
+- 可能产生死锁：如果当前线程setnx之后，tomcat服务器突然宕机，存在Redis中的分布式锁因为不能执行后续的expire或者del命令，导致分布式锁无法释放，形成死锁。
+- 避免死锁：如果因为tomcat服务器突然宕机，导致锁未删除产生死锁，可以利用setnx时候key的value值（默认是当前系统时间+timeout）和当前系统时间进行比较，判断锁是否已经过期，如果已经过期，继续判断通过getset命令重置锁的value值，并拿到原先锁的value值，判断锁是否被其它线程改动，如果未被改动，那么当前线程是有权获取到分布式锁，并重置分布式锁的value值。
+
+流程图：
+
+![](./images/分布式锁流程图.png)
+
+**分布式锁实现一**
+
+Redis中setnx命令在key不存在的情况下才能设置成功，并且是原子的，可以利用这一特性，来构造一个分布式锁，当一个线程设置了key，其它线程在通过setnx就会失败，相当于获取锁失败。获取锁的线程在获取锁时可以为锁设置一个过期时间，在关单后可以主动删除锁，确保锁被删除，防止死锁：
+
+```java
+@Scheduled(cron = "* */1 * * * ?")
+public void closeOrderTaskV2() {
+    log.info("关闭订单定时任务启动");
+    Long lockTimeout = Long.parseLong(PropertiesUtil.getProperty("lock.timeout", "5000"));
+    Long result = ShardedRedisUtil.setnx(Const.RedisLock.CLOSE_ORDER_TASK_LOCK, String.valueOf(System.currentTimeMillis() + lockTimeout));
+    if (result != null && result.intValue() == 1) {
+        // 获取锁成功
+        closeOrder(Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+    } else {
+        log.info("没有获取到分布式锁:{}", Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+    }
+    log.info("关闭订单定时任务结束");
+}
+```
+
+存在问题：
+
+如果setnx返回值表明获取锁成功，在即将进行关闭订单时，突然服务器关闭，会导致获取的分布式锁一直存在，没有关闭，形成死锁一种简单的解决思路：如果tomcat是使用shutdown命令关闭的，可以使用@PreDestory注解方法， 关闭之前会被执行到，但是如果是直接关闭tomcat服务器，使用@PreDestory注解没有作用。
+
+**分布式锁实现二**
+
+为了解决上面：setnx之后服务器突然宕机，分布式锁没有删除导致死锁的清空，引入双重防死锁方式。具体来说：在当前线程获取锁失败时，会根据当前时间和分布式锁设置的时间进行判断，判断分布式锁是否过期、是否未被其它线程改动过，以此来决定是否能够重置分布式锁：
+
+```java
+public void closeOrderTaskV3() {
+    log.info("关闭订单定时任务启动");
+    long lockTimeout = Long.parseLong(PropertiesUtil.getProperty("lock.timeout", 
+                                                                 "5000"));
+    Long result = ShardedRedisUtil.setnx(Const.RedisLock.CLOSE_ORDER_TASK_LOCK, 
+                             String.valueOf(System.currentTimeMillis() + lockTimeout));
+    if (result != null && result.intValue() == 1) {
+        // 获取锁成功
+        closeOrder(Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+    } else {
+        // 未获取到锁，继续判断时间戳，是否可以重置并得到锁
+        String lockValueStr = ShardedRedisUtil.get(Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+        if (lockValueStr != null && 
+            (System.currentTimeMillis() > Long.parseLong(lockValueStr))) {
+            String oldLockName = 
+                ShardedRedisUtil.getSet(Const.RedisLock.CLOSE_ORDER_TASK_LOCK, 
+                String.valueOf(System.currentTimeMillis() + lockTimeout));
+            if (oldLockName == null || StringUtils.equals(oldLockName, lockValueStr)) {
+                // 1. oldLockName==null，因为某种原因，Redis中的key已经不存在，当前线程可以获取锁
+                // 2. 在时间已经过期的情况下，两次获取key的值仍然相同（说明key未被其它线程改动过）
+                // 当前线程可以获取锁
+                closeOrder(Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+            } else {
+                log.info("没有获取到分布式锁:{}", Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+            }
+        } else {
+            // 1. lockValueStr == null，说明之前的setnx失败，result==null，应该返回获取锁失败
+            // 2. System.currentTimeMills() > Long.parseLong(lockValueStr)，说明tomcat在key
+            // 的有效期内重启成功，此时还在锁的有效期内，别的线程也不应该获取锁，返回获取锁失败
+            log.info("没有获取到分布式锁:{}", Const.RedisLock.CLOSE_ORDER_TASK_LOCK);
+        }
+    }
+    log.info("关闭订单定时任务结束");
+}
+```
 
