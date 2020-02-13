@@ -14,124 +14,124 @@ tlmall-springboot-ii
  |   +- ...
  |   +- img_n_in_markdown.png
  +- other
- |   +- image.sherman.com.conf 								// Nginx本地路径转发
- |   +- www.sherman.com.conf    							// Nginx负载均衡配置策略
- |   +- nginx.conf											// Nginx主配置文件
- +- questions.md											// 项目中遇到问题汇总
- +- pom.xml													// pom Maven依赖
- +- README.md												// readme文件
+ |   +- image.sherman.com.conf					// Nginx本地路径转发
+ |   +- www.sherman.com.conf    				// Nginx负载均衡配置策略
+ |   +- nginx.conf						// Nginx主配置文件
+ +- questions.md						// 项目中遇到问题汇总
+ +- pom.xml							// pom Maven依赖
+ +- README.md							// readme文件
  +- src
      +- main
          +- java
          |   +- fun
-         | 	     +- sherman
-         | 	 	     +- tlmall
-         |		         +- common							// 通用库封装
-         |	         	 |   +- Const.java
-         |		 	 	 |	 +- RedisPool.java
-         |			 	 |	 +- RedissonManager.java
-         |			 	 |	 +- ResponseCode.java
-         |			 	 |	 +- ServerResponse.java
-         |			 	 |	 +- ShardedRedisPool.java
-         |			 	 +- config							// Spring&SpringMVC配置类
-         |			 	 |   +- MainConfig.java
-         |			 	 |   +- SpringMvcConfig.java
-         |			 	 +- controller
-         |			 	 |   +- backend						// 后台控制器
-         |			 	 |   |   +- CategoryManageController.java
-         |			 	 |   |   +- OrderManageController.java
-         |			 	 |   |   +- ProductManageController.java
-         |			 	 |   |   +- UserManageController.java
-         |			 	 |   +- portal						// 门户控制器
-         |			 	 |   |   +- CartController.java
-         |			 	 |   |   +- OrderController.java
-         |			 	 |   |   +- ProductController.java
-         |			 	 |   |   +- ShippingController.java
-         |			 	 |   |   +- UserController
-         |			 	 +- dao								// dao层
-         |			 	 |   +- CartDao.java
-         |			 	 |   +- CategoryDao.java
-         |			 	 |   +- OrderDao.java
-         |			 	 |   +- OrderItemDao.java
-         |			 	 |   +- PayInfoDao.java
-         |			 	 |   +- ProductDao.java
-         |			 	 |   +- ShippingDao.java
-         |			 	 |   +- UserDao.java
-         |			 	 +- domain							// domain对象
-         |			 	 |   +- Cart.java
-         |			 	 |   +- Category.java
-         |			 	 |   +- Order.java
-         |			 	 |   +- OrderItem.java
-         |		     	 |   +- PayInfo.java
-         |			 	 |   +- Product.java
-         |			 	 |   +- Shipping.java
-         |			 	 |   +- User.java
-         |			 	 +- exception						// 自定义异常处理器
-         |			 	 |   +- CustomerExceptionHandler.java
-         |			 	 +- filter							// 重置用户登录有效期的过滤器
-         |			 	 |   +- SessionExpireFilter.java
-         |			 	 +- interceptor						// 管理员权限统一拦截
-         |			 	 |   +- AdminAuthorityInterceptor.java
-         |			 	 +- provider						// 动态SQL
-         |		     	 |   +- CartProvider.java
-         |			 	 |   +- CategoryProvider.java
-         |			 	 |   +- OrderProvider.java
-         |			 	 |   +- ProductProvider.java
-         |			 	 |   +- ShippingProvider.java
-         |			 	 |   +- UserProvider.java
-         |			 	 +- service							// service层
-         |			 	 |   +- impl						
-         |			 	 |   |   +- CartServiceImpl.java
-         |			 	 |   |   +- CategoryServiceImpl.java
-         |			 	 |   |   +- FileServiceImpl.java
-         |			 	 |   |   +- OrderServiceImpl.java
-         |			 	 |   |   +- ProductServiceImpl.java
-         |			 	 |   |   +- ShippingServiceImpl.java
-         |			 	 |   |   +- UserServiceImpl.java
-         |			 	 |   +- ICartService.java
-         |			 	 |   +- ICategoryService.java
-         |			 	 |   +- IFileService.java
-         |			 	 |   +- IOrderService.java
-         |			 	 |   +- IProductService.java
-         |			 	 |   +- IShippingService.java
-         |			 	 |   +- IUserService.java
-         |			 	 +- task							// 自动关单Schedule
-         |			 	 |   +- CloseOrderTask.java
-         |			  	 +- util							// 工具类封装
-         |			 	 |   +- BigDecimalUtil.java
-         |			 	 |   +- CookieUtil.java
-         |			 	 |   +- DateTImeUtil.java
-         |		     	 |   +- FtpUtil.java
-         |			 	 |   +- JacksonUtil.java
-         |			 	 |   +- MD5Util.java
-         |			 	 |   +- PropertiesUtil.java
-         |			 	 |   +- RedisUtil.java
-         |			 	 |   +- ShardedRedis.Util.java
-         |			 	 +- vo								// VO对象
-         |		         	 +- CartProductVo.java
-         |			     	 +- CartVo.java
-         |				 	 +- OrderItemVo.java
-         |					 +- OrderProductVo.java
-         |				 	 +- OrderVo.java
-         |					 +- ProductDetailVo.java
-         |					 +- ProductListVo.java
-         |					 +- ShippingVo.java
-         +- resources.dev									// Maven环境隔离-dev环境
+         | 	 +- sherman
+         | 	     +- tlmall
+         |		 +- common				// 通用库封装
+         |	         |   +- Const.java
+         |		 |	 +- RedisPool.java
+         |		 |	 +- RedissonManager.java
+         |	 	 |	 +- ResponseCode.java
+         |		 |	 +- ServerResponse.java
+         |		 |	 +- ShardedRedisPool.java
+         |		 +- config				// Spring&SpringMVC配置类
+         |		 |   +- MainConfig.java
+         |		 |   +- SpringMvcConfig.java
+         |		 +- controller
+         |		 |   +- backend				// 后台控制器
+         |		 |   |   +- CategoryManageController.java
+         |		 |   |   +- OrderManageController.java
+         |		 |   |   +- ProductManageController.java
+         |		 |   |   +- UserManageController.java
+         |		 |   +- portal				// 门户控制器
+         |		 |   |   +- CartController.java
+         |		 |   |   +- OrderController.java
+         |		 |   |   +- ProductController.java
+         |		 |   |   +- ShippingController.java
+         |		 |   |   +- UserController
+         |		 +- dao					// dao层
+         |		 |   +- CartDao.java
+         |		 |   +- CategoryDao.java
+         |		 |   +- OrderDao.java
+         |		 |   +- OrderItemDao.java
+         |		 |   +- PayInfoDao.java
+         |		 |   +- ProductDao.java
+         |		 |   +- ShippingDao.java
+         |		 |   +- UserDao.java
+         |		 +- domain				// domain对象
+         |		 |   +- Cart.java
+         |		 |   +- Category.java
+         |		 |   +- Order.java
+         |		 |   +- OrderItem.java
+         |		 |   +- PayInfo.java
+         |		 |   +- Product.java
+         |		 |   +- Shipping.java
+         |		 |   +- User.java
+         |		 +- exception				// 自定义异常处理器
+         |		 |   +- CustomerExceptionHandler.java
+         |		 +- filter				// 重置用户登录有效期的过滤器
+         |		 |   +- SessionExpireFilter.java
+         |		 +- interceptor				// 管理员权限统一拦截
+         |		 |   +- AdminAuthorityInterceptor.java
+         |		 +- provider				// 动态SQL
+         |		 |   +- CartProvider.java
+         |		 |   +- CategoryProvider.java
+         |		 |   +- OrderProvider.java
+         |		 |   +- ProductProvider.java
+         |		 |   +- ShippingProvider.java
+         |		 |   +- UserProvider.java
+         |		 +- service				// service层
+         |		 |   +- impl						
+         |		 |   |   +- CartServiceImpl.java
+         |		 |   |   +- CategoryServiceImpl.java
+         |		 |   |   +- FileServiceImpl.java
+         |		 |   |   +- OrderServiceImpl.java
+         |		 |   |   +- ProductServiceImpl.java
+         |		 |   |   +- ShippingServiceImpl.java
+         |		 |   |   +- UserServiceImpl.java
+         |		 |   +- ICartService.java
+         |		 |   +- ICategoryService.java
+         |		 |   +- IFileService.java
+         |		 |   +- IOrderService.java
+         |		 |   +- IProductService.java
+         |		 |   +- IShippingService.java
+         |		 |   +- IUserService.java
+         |		 +- task				// 自动关单Schedule
+         |		 |   +- CloseOrderTask.java
+         |		 +- util				// 工具类封装
+         |		 |   +- BigDecimalUtil.java
+         |		 |   +- CookieUtil.java
+         |		 |   +- DateTImeUtil.java
+         |		 |   +- FtpUtil.java
+         |		 |   +- JacksonUtil.java
+         |		 |   +- MD5Util.java
+         |		 |   +- PropertiesUtil.java
+         |		 |   +- RedisUtil.java
+         |		 |   +- ShardedRedis.Util.java
+         |		 +- vo					// VO对象
+         |		     +- CartProductVo.java
+         |		     +- CartVo.java
+         |		     +- OrderItemVo.java
+         |		     +- OrderProductVo.java
+         |		     +- OrderVo.java
+         |		     +- ProductDetailVo.java
+         |		     +- ProductListVo.java
+         |		     +- ShippingVo.java
+         +- resources.dev					// Maven环境隔离-dev环境
          |   +- logback-spring.xml
          |   +- zfbinfo.properties
-         +- resoueces.prod									// Maven环境隔离-prod环境
+         +- resoueces.prod					// Maven环境隔离-prod环境
          |   +- logback_spring.xml
          |   +- zfbinfo.properties
-         +- resources.test									// Maven环境隔离-test环境
+         +- resources.test					// Maven环境隔离-test环境
          |   +- logback_spring.xml
          |   +- zfbinfo.properties.xml
          +- resources
              +- templates
              |   +- error.html
              |   +- index.html
-             +- application.properties						// Spring Boot主配置文件
-             +- logback-spring.xml							// logback配置文件
-             +- zfbinfo.properties							// 支付宝配置文件
+             +- application.properties				// Spring Boot主配置文件
+             +- logback-spring.xml				// logback配置文件
+             +- zfbinfo.properties				// 支付宝配置文件
 ```
 
 
@@ -855,6 +855,7 @@ public void closeOrderTaskV2() {
 为了解决上面：setnx之后服务器突然宕机，分布式锁没有删除导致死锁的清空，引入双重防死锁方式。具体来说：在当前线程获取锁失败时，会根据当前时间和分布式锁设置的时间进行判断，判断分布式锁是否过期、是否未被其它线程改动过，以此来决定是否能够重置分布式锁：
 
 ```java
+@Scheduled(cron = "* */1 * * * ?")
 public void closeOrderTaskV3() {
     log.info("关闭订单定时任务启动");
     long lockTimeout = Long.parseLong(PropertiesUtil.getProperty("lock.timeout", 
@@ -968,6 +969,3 @@ tryLock的第一个参数waitTime在实际中建议直接设置为零，即尝�
   - useReplicatedServers()
   - useSentinelServers()
   - useClusterServers()
-
-
-
