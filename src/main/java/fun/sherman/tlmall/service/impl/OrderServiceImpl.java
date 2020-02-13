@@ -39,7 +39,7 @@ import java.util.*;
  * @author sherman
  */
 @Service("iOrderService")
-public class IOrderServiceImpl implements IOrderService {
+public class OrderServiceImpl implements IOrderService {
     // 支付宝当面付2.0服务
     private static AlipayTradeService tradeService;
 
@@ -53,7 +53,7 @@ public class IOrderServiceImpl implements IOrderService {
         tradeService = new AlipayTradeServiceImpl.ClientBuilder().build();
     }
 
-    private static Logger logger = LoggerFactory.getLogger(IOrderServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     private OrderDao orderDao;
