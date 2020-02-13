@@ -184,23 +184,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- 参考网址：https://blog.csdn.net/csdn2193714269/article/details/78391274 -->
-        <dependency>
-            <groupId>com.alipay</groupId>
-            <artifactId>com-alipay</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/alipay-sdk-java20161213173952.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alipay.demo</groupId>
-            <artifactId>com-alipay-demo</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/alipay-trade-sdk-20161215.jar</systemPath>
-        </dependency>
-
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
@@ -231,6 +214,27 @@
             <artifactId>jackson-dataformat-avro</artifactId>
             <version>2.10.2</version>
         </dependency>
+
+        <!--
+            Maven打包本地lib jar
+            参考网址：https://blog.csdn.net/csdn2193714269/article/details/78391274
+        -->
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>com-alipay</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/alipay-sdk-java20161213173952.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.demo</groupId>
+            <artifactId>com-alipay-demo</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/alipay-trade-sdk-20161215.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>
