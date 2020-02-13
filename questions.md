@@ -2,7 +2,7 @@
 
 ### 1. maven打包加入本地lib
 
-参考文章：https://blog.csdn.net/csdn2193714269/article/details/78391274亲测可行，注意几点问题：
+参考文章：https://blog.csdn.net/csdn2193714269/article/details/78391274，亲测可行，注意几点问题：
 
 - 需要打包的本地lib为支付宝沙箱环境支付的jar包，下载后将对应的jar包放入到src/main/resources/lib下
 
@@ -11,7 +11,7 @@
 
 ```xml
 <!--
-	Maven打包本地lib jar
+    Maven打包本地lib jar
     参考网址：https://blog.csdn.net/csdn2193714269/article/details/78391274
 -->
 <dependency>
